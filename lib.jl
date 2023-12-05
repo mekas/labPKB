@@ -125,6 +125,7 @@ function faster_generate_dataset(df_list, class, step, max_iter)
         num_instance = size(df_list[c])[1]
 
         new_df = zeros(Float16, num_instance*max_iter, m)
+        # println(size(new_df))
         # initially fill with matrix of df_list 
         df = df_list[c]
         # get current df (vector)

@@ -53,15 +53,22 @@ function true_correctness(conf_mat)
     return correctness
 end
 
-function measure_corretness(truths, gpreds, preds)
+function measure_corretness(truths, gpreds, preds,class)
     # compute global correctness for gpreds 
+    _, nc = size(preds)
     valuation = confusion_matrix(truths, gpreds)
     gcorrectness_vector = true_correctness(valuation)
+    gcorrectness_vector = repeat(gcorrectness_vector', outer=[nc 1])
+    
     
     # compute correctness for each feature in preds
-    _, nc = size(preds)
+    current_correctness_vector = zeros(nc, length(class))
     for i=1:nc
         valuation = confusion_matrix(truths, preds[:,i])
         current_correctness = true_correctness(valuation)
+        current_correctness_vector[i, :] = current_correctness
     end
+    #display(current_correctness_vector)
+    diff = gcorrectness_vector .- current_correctness_vector
+    println(sum(diff, dims=2))
 end

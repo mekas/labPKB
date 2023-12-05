@@ -66,20 +66,18 @@ function classify(df)
     return hcat(df, preds)
 end
 
-function classify_v2(df)
+function classify_v2(df, batch_size)
     class = unique(df[:,end])
     class_index = size(df)[2]
 
     col_size = size(df)[2]
     feature_size = col_size-1
-    num_instance = size(df)[1]
-    batch_size = Int(floor(num_instance / 2000))
-
+    
     # df_sample = better_split(df, 0.00001) 
-    mu_vec = compute_mu_v2(df, class, feature_size, class_index)
+    mu_vec = @time compute_mu_v2(df, class, feature_size, class_index)
 
     # mu_vec = @time fast_compute_mu(df, class, feature_size, class_index, batch_size)
-    preds = classify_all_v2(df, mu_vec, feature_size, batch_size)
+    preds = @time classify_all_v2(df, mu_vec, feature_size, batch_size)
     df = hcat(df[:,class_index], preds)
     return df
 end

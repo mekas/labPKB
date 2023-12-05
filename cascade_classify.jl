@@ -45,6 +45,7 @@ function classify_by_distance_features(X, mu)
     num_instance = size(X)[1]
     mu_vec = repeat(mu, outer = [num_instance, 1, 1])
     dist_vec = vectorized_d1_distance(X, mu_vec)
+    
     min_vector = argmin(dist_vec, dims=3)
     min_index = @.get_min_index(min_vector)
     return min_index
@@ -68,6 +69,7 @@ num_instance = size(df)[1]
 batch_size = Int(floor(num_instance / 2000))
 
 truths, preds = @time cascade_classify(df, batch_size)
-gpreds = @time classify_v2(df)
+gpreds = @time classify_v2(df, batch_size)
+measure_corretness(truths, gpreds[:, 2], preds, class)
 
 
